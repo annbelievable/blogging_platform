@@ -1,8 +1,4 @@
 const { initializeApp } = require("firebase/app");
-const {
-    initializeAppCheck,
-    ReCaptchaV3Provider,
-} = require("firebase/app-check");
 const { getFirestore } = require("firebase/firestore");
 const { getAnalytics, isSupported } = require("firebase/analytics");
 const { getAuth } = require("firebase/auth");
@@ -25,16 +21,6 @@ const firebaseConfig = {
 // Initialize Firebase
 const fbApp = initializeApp(firebaseConfig);
 
-//const appCheck = initializeAppCheck(fbApp, {
-//    provider: new ReCaptchaV3Provider(
-//        "6LcUbRUnAAAAAB6JcII524vDIMJZSle4GPNYBDs8"
-//    ),
-
-//    // Optional argument. If true, the SDK automatically refreshes App Check
-//    // tokens as needed.
-//    isTokenAutoRefreshEnabled: true,
-//});
-
 const db = getFirestore(fbApp);
 const auth = getAuth(fbApp);
 let analytics = null;
@@ -42,7 +28,5 @@ let analytics = null;
 if (isSupported()) {
     //analytics = getAnalytics(fbApp);
 }
-
-console.log(fbApp);
 
 module.exports = auth;
