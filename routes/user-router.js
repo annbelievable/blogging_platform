@@ -1,6 +1,10 @@
-const auth = require("../firebase");
 const express = require("express");
+const cookie = require("cookie");
+const jwt = require("jsonwebtoken");
 const authentication = require("firebase/auth");
+
+const auth = require("../firebase");
+const { ACCESS_TOKEN_SECRET } = require("../constants");
 const router = express.Router();
 
 /* GET login page. */
@@ -15,6 +19,20 @@ router.post("/login", function (req, res, next) {
     authentication
         .signInWithEmailAndPassword(auth, email, password)
         .then(() => {
+            const token = jwt.sign({ email }, ACCESS_TOKEN_SECRET, {
+                expiresIn: "1h",
+            });
+
+            // Set the token as a cookie in the response
+            const cookieOptions = {
+                maxAge: 3600000, // Expiration time in milliseconds
+                httpOnly: true, // Cookie cannot be accessed via JavaScript
+            };
+            res.setHeader(
+                "Set-Cookie",
+                cookie.serialize("token", token, cookieOptions)
+            );
+
             res.render("login", {
                 title: "Login",
                 message: "Login success",
