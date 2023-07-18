@@ -10,8 +10,20 @@ router.get("/login", function (req, res, next) {
 
 /* login the user */
 router.post("/login", function (req, res, next) {
-    // get the request and send it to firebase
-    res.render("login", { title: "Submitted" });
+    const { email, password } = req.body;
+
+    authentication
+        .signInWithEmailAndPassword(auth, email, password)
+        .then(() => {
+            res.render("login", {
+                title: "Login",
+                message: "Login success",
+            });
+        })
+        .catch((error) => {
+            console.error(error);
+            res.render("login", { title: "Login", message: "Login fail" });
+        });
 });
 
 /* GET signup page. */
@@ -29,7 +41,7 @@ router.post("/signup", function (req, res, next) {
         console.error(e);
     }
 
-    res.render("login", { title: "Submitted", message: "Signup success" });
+    res.render("login", { title: "Login", message: "Signup success" });
 });
 
 module.exports = router;
