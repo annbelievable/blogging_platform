@@ -1,15 +1,28 @@
 const express = require("express");
 const cookie = require("cookie");
 const jwt = require("jsonwebtoken");
+//const firebase = require("firebase");
 const authentication = require("firebase/auth");
 
-const auth = require("../firebase");
+const auth = require("../firebaseApp");
 const { ACCESS_TOKEN_SECRET } = require("../constants");
 const router = express.Router();
 
 /* GET login page. */
 router.get("/login", function (req, res, next) {
     res.render("login", { title: "Login" });
+
+    //var user = authentication.currentUser;
+
+    auth.onAuthStateChanged((user) => {
+        if (user) {
+            // User is signed in.
+            console.log("Logged in");
+        } else {
+            // No user is signed in.
+            console.log("Not logged in");
+        }
+    });
 });
 
 /* login the user */

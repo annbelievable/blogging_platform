@@ -1,5 +1,5 @@
 const express = require("express");
-const auth = require("./firebase");
+const auth = require("./firebaseApp");
 const path = require("path");
 
 const CommentRouter = require("./routes/comment-router");
