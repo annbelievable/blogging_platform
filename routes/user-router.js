@@ -10,17 +10,12 @@ const router = express.Router();
 
 /* GET login page. */
 router.get("/login", function (req, res, next) {
-    res.render("login", { title: "Login" });
-
-    //var user = authentication.currentUser;
-
     auth.onAuthStateChanged((user) => {
         if (user) {
-            // User is signed in.
-            console.log("Logged in");
+            // user is logged in, redirect to home page
+            res.redirect("/");
         } else {
-            // No user is signed in.
-            console.log("Not logged in");
+            res.render("login", { title: "Login" });
         }
     });
 });
@@ -59,7 +54,14 @@ router.post("/login", function (req, res, next) {
 
 /* GET signup page. */
 router.get("/signup", function (req, res, next) {
-    res.render("signup", { title: "Sign up" });
+    auth.onAuthStateChanged((user) => {
+        if (user) {
+            // user is logged in, redirect to home page
+            res.redirect("/");
+        } else {
+            res.render("signup", { title: "Sign up" });
+        }
+    });
 });
 
 /* register the user */
