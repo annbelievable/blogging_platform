@@ -1,6 +1,7 @@
 const express = require("express");
 const auth = require("./firebaseApp");
 const path = require("path");
+const cookieParser = require("cookie-parser");
 
 const CommentRouter = require("./routes/comment-router");
 const UserRouter = require("./routes/user-router");
@@ -9,6 +10,7 @@ const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser());
 
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");

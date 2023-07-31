@@ -10,6 +10,8 @@ const router = express.Router();
 
 /* GET login page. */
 router.get("/login", function (req, res, next) {
+    const token = req.cookies.token;
+    console.log(token);
     auth.onAuthStateChanged((user) => {
         if (user) {
             // user is logged in, redirect to home page
