@@ -10,8 +10,6 @@ const router = express.Router();
 
 /* GET login page. */
 router.get("/login", function (req, res, next) {
-    const token = req.cookies.token;
-    console.log(token);
     auth.onAuthStateChanged((user) => {
         if (user) {
             // user is logged in, redirect to home page
@@ -30,7 +28,7 @@ router.post("/login", function (req, res, next) {
         .signInWithEmailAndPassword(auth, email, password)
         .then(() => {
             const token = jwt.sign({ email }, ACCESS_TOKEN_SECRET, {
-                expiresIn: "1h",
+                expiresIn: "4h",
             });
 
             // Set the token as a cookie in the response
@@ -38,10 +36,8 @@ router.post("/login", function (req, res, next) {
                 maxAge: 3600000, // Expiration time in milliseconds
                 httpOnly: true, // Cookie cannot be accessed via JavaScript
             };
-            res.setHeader(
-                "Set-Cookie",
-                cookie.serialize("token", token, cookieOptions)
-            );
+
+            res.cookie("authentication_status", token, cookieOptions);
 
             res.render("login", {
                 title: "Login",
