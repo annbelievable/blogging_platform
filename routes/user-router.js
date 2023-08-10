@@ -39,10 +39,7 @@ router.post("/login", function (req, res, next) {
 
             res.cookie("authentication_status", token, cookieOptions);
 
-            res.render("login", {
-                title: "Login",
-                message: "Login success",
-            });
+            res.redirect("/");
         })
         .catch((error) => {
             console.error(error);
