@@ -73,7 +73,7 @@ router.get("/logout", function (req, res, next) {
     try {
         authentication.signOut(auth);
 
-        res.redirect("/");
+        res.redirect("/user/login");
     } catch (e) {
         console.error(e);
 
