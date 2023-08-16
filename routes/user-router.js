@@ -38,8 +38,8 @@ router.post("/login", function (req, res, next) {
 
             res.redirect("/");
         })
-        .catch((error) => {
-            console.error(error);
+        .catch((e) => {
+            console.error(e);
             res.render("login", { title: "Login", message: "Login fail" });
         });
 });
@@ -67,6 +67,18 @@ router.post("/signup", function (req, res, next) {
     }
 
     res.render("login", { title: "Login", message: "Signup success" });
+});
+
+router.get("/logout", function (req, res, next) {
+    try {
+        authentication.signOut(auth);
+
+        res.redirect("/");
+    } catch (e) {
+        console.error(e);
+
+        res.redirect("/");
+    }
 });
 
 module.exports = router;
