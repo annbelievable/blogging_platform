@@ -1,9 +1,10 @@
 const express = require("express");
-const auth = require("./firebaseApp");
 const path = require("path");
 const cookieParser = require("cookie-parser");
 const dotenv = require("dotenv").config();
 
+const auth = require("./firebaseApp");
+const BlogRouter = require("./routes/blog-router");
 const CommentRouter = require("./routes/comment-router");
 const UserRouter = require("./routes/user-router");
 
@@ -19,6 +20,7 @@ app.set("view engine", "ejs");
 app.get("/", (req, res, next) => {
     res.send("Hello world");
 });
+app.use("/blog", BlogRouter);
 app.use("/comment", CommentRouter);
 app.use("/user", UserRouter);
 
