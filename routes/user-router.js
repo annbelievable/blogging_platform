@@ -72,6 +72,7 @@ router.post("/signup", function (req, res, next) {
 router.get("/logout", function (req, res, next) {
     try {
         authentication.signOut(auth);
+        res.clearCookie("authentication_status");
 
         res.redirect("/user/login");
     } catch (e) {
