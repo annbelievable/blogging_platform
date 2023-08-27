@@ -4,7 +4,8 @@ const validateToken = (req, res, next) => {
     let cookie = req.headers.cookie;
     if (!cookie || !cookie.startsWith("authentication_status")) {
         res.status(401);
-        return res.send("User is not authorized");
+        //return res.send("User is not authorized");
+        res.redirect("/user/login");
     }
 
     const token = cookie.split("=")[1];
