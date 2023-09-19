@@ -2,21 +2,36 @@ const jwt = require("jsonwebtoken");
 
 const validateToken = (req, res, next) => {
     let cookie = req.headers.cookie;
-    if (!cookie || !cookie.startsWith("authentication_status")) {
-        res.status(401);
-        //return res.send("User is not authorized");
-        res.redirect("/user/login");
+    let cookieKeyVals = cookie.split("; ");
+    let verified = false;
+
+    // Iterate through the cookie pairs to find authentication_status
+    for (const keyVal of cookieKeyVals) {
+        let [key, value] = keyVal.split("=");
+        if (key === "authentication_status") {
+            jwt.verify(
+                value,
+                process.env.ACCESS_TOKEN_SECRET,
+                (err, decoded) => {
+                    if (err) {
+                        res.status(401);
+                        return res.send("User is not authorized");
+                    }
+                    req.user = decoded.user;
+                    verified = true;
+                    next();
+                    return;
+                }
+            );
+        }
     }
 
-    const token = cookie.split("=")[1];
-    jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, decoded) => {
-        if (err) {
-            res.status(401);
-            return res.send("User is not authorized");
-        }
-        req.user = decoded.user;
-        next();
-    });
+    if (!verified) {
+        res.status(401);
+        return res.send("User is not authorized");
+        //res.redirect("/user/login");
+    } else {
+    }
 };
 
 module.exports = { validateToken };
