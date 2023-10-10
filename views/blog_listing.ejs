@@ -1,0 +1,17 @@
+<%- include('./partials/head'); %>
+
+<div>
+	<% blogs.forEach( function(blog){ %>
+		<div>
+			<% if( blog.imageUrl != undefined && blog.imageUrl.length > 0){ %>
+				<img src="<%= blog.imageUrl %>" width="400" height="300"/>
+			<% } else{ %>
+				<img src="https://placehold.co/400x300?text=<%= blog.image_header %>" width="400" height="300"/>
+			<% } %>
+			<h3><%= blog.image_header %></h3>
+			<h3><%= blog.header %></h3>
+		</div>
+	<% }); %>
+</div>
+
+<%- include('./partials/foot'); %>

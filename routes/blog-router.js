@@ -18,8 +18,10 @@ const { validateToken } = require("../middleware/validateTokenHandler");
 const { app } = require("../index");
 const storage = getStorage(app, "blogging-platform-c87fd.appspot.com");
 const multerStoreage = multer.memoryStorage();
+const upload = multer({ storage: multerStoreage }).single("image");
 const db = getFirestore();
 const blogref = collection(db, "Blogs");
+
 const router = express.Router();
 
 router.use(validateToken);
@@ -30,7 +32,6 @@ router.get("/add", function (req, res, next) {
 });
 
 // add action
-const upload = multer({ storage: multerStoreage }).single("image");
 router.post("/add", upload, function (req, res, next) {
     const { header, sub_header, content, image_header } = req.body;
 
@@ -72,13 +73,34 @@ router.post("/add", upload, function (req, res, next) {
                 });
             }
         );
+    } else {
+        addDoc(blogref, {
+            header: header,
+            sub_header: sub_header,
+            content: content,
+            image_header: image_header,
+        });
     }
 
     res.status(200).json({ success: true });
+    res.redirect("/blog/list");
 });
 
 //get list
-router.post("/list", function (req, res, next) {});
+router.get("/list", async function (req, res, next) {
+    let blogs = [];
+    try {
+        // Use await to wait for the Promise to resolve
+        const querySnapshot = await getDocs(blogref);
+
+        // Extract the data from the querySnapshot
+        blogs = querySnapshot.docs.map((doc) => doc.data());
+    } catch (error) {
+        console.error(error);
+    }
+
+    res.render("blog_listing", { title: "Blog Listing", blogs: blogs });
+});
 
 //get detail
 router.get("/:id", function (req, res, next) {});
