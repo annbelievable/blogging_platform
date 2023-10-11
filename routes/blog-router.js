@@ -6,6 +6,8 @@ const {
     getDocs,
     addDoc,
     updateDoc,
+    doc,
+    getDoc,
 } = require("firebase/firestore");
 const {
     getStorage,
@@ -94,7 +96,12 @@ router.get("/list", async function (req, res, next) {
         const querySnapshot = await getDocs(blogref);
 
         // Extract the data from the querySnapshot
-        blogs = querySnapshot.docs.map((doc) => doc.data());
+        blogs = querySnapshot.docs.map((doc) => {
+            return {
+                id: doc.id,
+                ...doc.data(),
+            };
+        });
     } catch (error) {
         console.error(error);
     }
@@ -103,7 +110,20 @@ router.get("/list", async function (req, res, next) {
 });
 
 //get detail
-router.get("/:id", function (req, res, next) {});
+router.get("/:id", async function (req, res, next) {
+    const id = req.params.id;
+    const docRef = doc(blogref, id);
+    const docSnapshot = await getDoc(docRef);
+    const data = docSnapshot.data();
+
+    if (docSnapshot.exists()) {
+        const data = docSnapshot.data();
+
+        res.render("blog_detail", { title: data.header, blog: data });
+    } else {
+        res.render("404", { title: "Page Not Found" });
+    }
+});
 
 //update
 router.put("/:id", function (req, res, next) {
